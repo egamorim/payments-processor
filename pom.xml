@@ -67,6 +67,17 @@
 			<artifactId>camel-swagger-java-starter</artifactId>
 		</dependency>
 
+		<!-- DynamoDB Dependencies -->
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-dynamodb</artifactId>
+			<version>1.11.64</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.derjust</groupId>
+			<artifactId>spring-data-dynamodb</artifactId>
+			<version>5.1.0</version>
+		</dependency>
 
 		<!-- logging -->
 		<dependency>
