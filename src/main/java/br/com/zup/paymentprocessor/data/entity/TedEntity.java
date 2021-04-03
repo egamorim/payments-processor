@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@DynamoDBTable(tableName = "pagamento")
+@DynamoDBTable(tableName = "ted")
 public class TedEntity {
 
     @DynamoDBHashKey
