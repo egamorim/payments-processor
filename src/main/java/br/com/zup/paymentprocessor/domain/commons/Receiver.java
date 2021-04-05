@@ -1,6 +1,6 @@
 package br.com.zup.paymentprocessor.domain.commons;
 
-import br.com.zup.paymentprocessor.domain.enums.TipoConta;
+import br.com.zup.paymentprocessor.domain.enums.AccountType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,17 +9,17 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class Recebedor implements Serializable {
+public class Receiver implements Serializable {
 
     private static final long serialVersionUID = 9090533664164308960L;
 
     private UUID id;
 
-    private String nome;
+    private String name;
 
-    private String conta;
+    private String account;
 
-    private String agencia;
+    private String agency;
 
-    private TipoConta tipoConta;
+    private AccountType accountType;
 }

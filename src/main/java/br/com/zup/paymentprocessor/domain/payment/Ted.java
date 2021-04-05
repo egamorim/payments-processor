@@ -1,7 +1,7 @@
-package br.com.zup.paymentprocessor.domain.pagamento;
+package br.com.zup.paymentprocessor.domain.payment;
 
-import br.com.zup.paymentprocessor.domain.commons.Pagador;
-import br.com.zup.paymentprocessor.domain.commons.Recebedor;
+import br.com.zup.paymentprocessor.domain.commons.Payer;
+import br.com.zup.paymentprocessor.domain.commons.Receiver;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,12 +18,12 @@ public class Ted  implements Serializable {
 
     private UUID id;
 
-    private LocalDate dataPagamento;
+    private LocalDate date;
 
-    private BigDecimal valorPagamento;
+    private BigDecimal amount;
 
-    private Pagador pagador;
+    private Payer payer;
 
-    private Recebedor recebedor;
+    private Receiver receiver;
 
 }
