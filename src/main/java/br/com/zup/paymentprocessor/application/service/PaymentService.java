@@ -1,4 +1,4 @@
-package br.com.zup.paymentprocessor.service;
+package br.com.zup.paymentprocessor.application.service;
 
 import br.com.zup.paymentprocessor.integration.dto.PaymentDTO;
 import org.springframework.stereotype.Component;

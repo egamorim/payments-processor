@@ -4,7 +4,7 @@ import br.com.zup.paymentprocessor.config.KafkaProperties;
 import br.com.zup.paymentprocessor.integration.dto.PaymentDTO;
 import br.com.zup.paymentprocessor.integration.processors.PaymentProcessor;
 import br.com.zup.paymentprocessor.integration.processors.error.RestPaymentError;
-import br.com.zup.paymentprocessor.service.PaymentService;
+import br.com.zup.paymentprocessor.application.service.PaymentService;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.jackson.JacksonDataFormat;
 import org.apache.camel.component.kafka.KafkaConstants;
@@ -15,7 +15,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
-import static br.com.zup.paymentprocessor.domain.Constants.*;
+import static br.com.zup.paymentprocessor.application.domain.Constants.*;
 
 @Component
 public class PaymentRoutes extends RouteBuilder {
