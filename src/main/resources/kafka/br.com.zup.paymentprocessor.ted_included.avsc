@@ -1,0 +1,19 @@
+{
+  "namespace": "br.com.zup.paymentprocessor.ted_included",
+  "name": "TedIncluded",
+  "type": "record",
+  "fields": [
+    {
+      "name": "id_ted",
+      "type": "string"
+    },
+    {
+      "name": "data_pagamento",
+      "type": "string"
+    },
+    {
+      "name": "value_payment",
+      "type": "string"
+    }
+  ]
+}

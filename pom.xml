@@ -117,6 +117,19 @@
 			<version>${camel.kafka}</version>
 		</dependency>
 
+		<!-- Avro -->
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-avro</artifactId>
+			<version>${camel.kafka}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.avro</groupId>
+			<artifactId>avro</artifactId>
+			<version>1.10.2</version>
+		</dependency>
+
 		<!-- DynamoDB Dependencies -->
 		<dependency>
 			<groupId>com.amazonaws</groupId>
@@ -132,7 +145,34 @@
 	</dependencies>
 
 	<build>
+
 		<plugins>
+			<plugin>
+				<groupId>org.apache.avro</groupId>
+				<artifactId>avro-maven-plugin</artifactId>
+				<version>1.10.2</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>schema</goal>
+						</goals>
+						<configuration>
+							<sourceDirectory>${project.basedir}/src/main/resources/kafka</sourceDirectory>
+							<outputDirectory>${project.basedir}/target/classes/kafka/java/</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

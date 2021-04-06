@@ -22,6 +22,6 @@ public class TedEntity {
     private LocalDate dataPagamento;
 
     @DynamoDBAttribute
-    private BigDecimal valorPagamento;
+    private BigDecimal valuePayment;
 
 }
