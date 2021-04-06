@@ -1,4 +1,4 @@
-package br.com.zup.paymentprocessor.domain.enums;
+package br.com.zup.paymentprocessor.application.domain.payment.commons.enums;
 
 import lombok.Getter;
 

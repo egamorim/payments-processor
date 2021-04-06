@@ -1,4 +1,4 @@
-package br.com.zup.paymentprocessor.domain;
+package br.com.zup.paymentprocessor.application.domain;
 
 public class Constants {
 

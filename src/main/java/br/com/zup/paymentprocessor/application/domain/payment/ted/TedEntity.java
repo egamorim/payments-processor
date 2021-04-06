@@ -1,4 +1,4 @@
-package br.com.zup.paymentprocessor.data.entity;
+package br.com.zup.paymentprocessor.application.domain.payment.ted;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;

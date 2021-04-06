@@ -1,6 +1,5 @@
-package br.com.zup.paymentprocessor.data.repository;
+package br.com.zup.paymentprocessor.application.domain.payment.ted;
 
-import br.com.zup.paymentprocessor.data.entity.TedEntity;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

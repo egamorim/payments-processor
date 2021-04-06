@@ -1,6 +1,6 @@
-package br.com.zup.paymentprocessor.domain.commons;
+package br.com.zup.paymentprocessor.application.domain.payment.commons;
 
-import br.com.zup.paymentprocessor.domain.enums.AccountType;
+import br.com.zup.paymentprocessor.application.domain.payment.commons.enums.AccountType;
 import lombok.Getter;
 import lombok.Setter;
 
