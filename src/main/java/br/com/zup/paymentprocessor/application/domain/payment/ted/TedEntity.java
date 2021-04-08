@@ -18,7 +18,7 @@ public class TedEntity {
 
     @DynamoDBAttribute
     @DynamoDBTypeConverted(converter = LocalDateToStringTypeConverter.class)
-    private LocalDate dataPayment;
+    private LocalDate datePayment;
 
      @DynamoDBAttribute
      private BigDecimal valuePayment;
