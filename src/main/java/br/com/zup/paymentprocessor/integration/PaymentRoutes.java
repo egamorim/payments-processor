@@ -1,5 +1,6 @@
 package br.com.zup.paymentprocessor.integration;
 
+import br.com.zup.paymentprocessor.application.service.TedService;
 import br.com.zup.paymentprocessor.config.KafkaProperties;
 import br.com.zup.paymentprocessor.integration.dto.PaymentDTO;
 import br.com.zup.paymentprocessor.integration.processors.PaymentProcessor;
@@ -26,6 +27,7 @@ public class PaymentRoutes extends RouteBuilder {
     private static final String PAYMENTS_PATH = "payments";
 
     private final PaymentService paymentService;
+    private final TedService tedService;
     private final PaymentProcessor tedProcessor;
     private final PaymentProcessor docProcessor;
     private final Environment env;
@@ -36,9 +38,11 @@ public class PaymentRoutes extends RouteBuilder {
                          @Qualifier("docProcessor") PaymentProcessor docProcessor,
                          Environment env,
                          PaymentService paymentService,
+                         TedService tedService,
                          @Value("${server.port}") String serverPort,
                          KafkaProperties kafkaProperties) {
         this.tedProcessor = tedProcessor;
+        this.tedService = tedService;
         this.docProcessor = docProcessor;
         this.kafkaProperties = kafkaProperties;
         this.env = env;
@@ -48,7 +52,6 @@ public class PaymentRoutes extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
-
 
         restConfiguration()
                 .contextPath(env.getProperty("camel.component.servlet.mapping.contextPath", "/rest/*"))
@@ -70,10 +73,10 @@ public class PaymentRoutes extends RouteBuilder {
                 .when(header(TYPE_HEADER)
                         .isEqualToIgnoreCase(PAYMENT_TYPE_PIX))
                 .bean(paymentService, "validate")
-                .bean(paymentService, "store")
                 .to("direct:pix")
                 .when(header(TYPE_HEADER)
                         .isEqualToIgnoreCase(PAYMENT_TYPE_TED))
+                .bean(tedService, "store")
                 .process(tedProcessor)
                 .setHeader(KafkaConstants.KEY, constant("Camel"))
                 .to(String.format(KAFKA_TED_INCLUDED, kafkaProperties.getTedIncluded().getTopicName(), kafkaProperties.getUrl()))
@@ -92,6 +95,14 @@ public class PaymentRoutes extends RouteBuilder {
         from("direct:doc")
                 .log("New DOC processed")
                 .end();
+
+        //TODO será implementado na pagamento processo
+        from(String.format(KAFKA_TED_INCLUDED, kafkaProperties.getTedIncluded().getTopicName(), kafkaProperties.getUrl()))
+                .log("Message received from Kafka : ${body}")
+                .log("    on the topic ${headers[kafka.TOPIC]}")
+                .log("    on the partition ${headers[kafka.PARTITION]}")
+                .log("    with the offset ${headers[kafka.OFFSET]}")
+                .log("    with the key ${headers[kafka.KEY]}");
 
         from("direct:pix")
                 .log("New PIX processed")

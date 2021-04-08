@@ -1,7 +1,10 @@
 package br.com.zup.paymentprocessor.integration.processors;
 
 import br.com.zup.paymentprocessor.application.domain.payment.ted.TedEntity;
+import br.com.zup.paymentprocessor.application.domain.payment.ted.TedRepository;
+import br.com.zup.paymentprocessor.application.mappers.payment.ted.TedEntityMapper;
 import br.com.zup.paymentprocessor.application.mappers.payment.ted.included.TedIncludedMapper;
+import br.com.zup.paymentprocessor.integration.dto.PaymentDTO;
 import br.com.zup.paymentprocessor.ted_included.TedIncluded;
 import org.apache.camel.Exchange;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,9 +23,9 @@ public class TedProcessor implements PaymentProcessor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        TedEntity tedEntity = exchange.getIn().getBody(TedEntity.class);
+        PaymentDTO paymentDTO = exchange.getIn().getBody(PaymentDTO.class);
 
-        TedIncluded tedIncluded = tedIncludedMapper.tedEntityToTedIncluded(tedEntity);
+        TedIncluded tedIncluded = tedIncludedMapper.paymentDtoToTedIncluded(paymentDTO);
         exchange.getIn().setBody(tedIncluded);
     }
 }
