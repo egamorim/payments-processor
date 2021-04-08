@@ -19,7 +19,7 @@ public class TedEntity {
     private UUID id;
 
     @DynamoDBAttribute
-    private LocalDate dataPagamento;
+    private LocalDate dataPayment;
 
     @DynamoDBAttribute
     private BigDecimal valuePayment;

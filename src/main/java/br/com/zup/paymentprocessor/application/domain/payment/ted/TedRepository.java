@@ -4,6 +4,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TedRepository extends CrudRepository<String, TedEntity> {
+public interface TedRepository extends CrudRepository<TedEntity, String> {
 
 }

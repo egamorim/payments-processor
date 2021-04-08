@@ -4,11 +4,11 @@
   "type": "record",
   "fields": [
     {
-      "name": "id_ted",
+      "name": "id",
       "type": "string"
     },
     {
-      "name": "data_pagamento",
+      "name": "data_payment",
       "type": "string"
     },
     {
