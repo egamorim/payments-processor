@@ -1,27 +1,26 @@
 package br.com.zup.paymentprocessor.application.domain.payment.ted;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+import br.com.zup.paymentprocessor.application.converter.LocalDateToStringTypeConverter;
+import com.amazonaws.services.dynamodbv2.datamodeling.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Getter
 @Setter
-@DynamoDBTable(tableName = "ted")
+@DynamoDBTable(tableName = "ted-included")
 public class TedEntity {
 
     @DynamoDBHashKey
-    private UUID id;
+    private String id;
 
     @DynamoDBAttribute
+    @DynamoDBTypeConverted(converter = LocalDateToStringTypeConverter.class)
     private LocalDate dataPayment;
 
-    @DynamoDBAttribute
-    private BigDecimal valuePayment;
+     @DynamoDBAttribute
+     private BigDecimal valuePayment;
 
 }

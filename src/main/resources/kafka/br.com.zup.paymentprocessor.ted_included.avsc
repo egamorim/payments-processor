@@ -8,7 +8,7 @@
       "type": "string"
     },
     {
-      "name": "data_payment",
+      "name": "date_payment",
       "type": "string"
     },
     {

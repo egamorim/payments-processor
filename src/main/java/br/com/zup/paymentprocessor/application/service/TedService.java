@@ -4,6 +4,7 @@ import br.com.zup.paymentprocessor.application.domain.payment.ted.TedEntity;
 import br.com.zup.paymentprocessor.application.domain.payment.ted.TedRepository;
 import br.com.zup.paymentprocessor.application.mappers.payment.ted.TedEntityMapper;
 import br.com.zup.paymentprocessor.integration.dto.PaymentDTO;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 @Component

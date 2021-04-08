@@ -97,12 +97,12 @@ public class PaymentRoutes extends RouteBuilder {
                 .end();
 
         //TODO será implementado na pagamento processo
-        from(String.format(KAFKA_TED_INCLUDED, kafkaProperties.getTedIncluded().getTopicName(), kafkaProperties.getUrl()))
+       /* from(String.format(KAFKA_TED_INCLUDED, kafkaProperties.getTedIncluded().getTopicName(), kafkaProperties.getUrl()))
                 .log("Message received from Kafka : ${body}")
                 .log("    on the topic ${headers[kafka.TOPIC]}")
                 .log("    on the partition ${headers[kafka.PARTITION]}")
                 .log("    with the offset ${headers[kafka.OFFSET]}")
-                .log("    with the key ${headers[kafka.KEY]}");
+                .log("    with the key ${headers[kafka.KEY]}");*/
 
         from("direct:pix")
                 .log("New PIX processed")
