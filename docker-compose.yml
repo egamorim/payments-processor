@@ -48,6 +48,11 @@ services:
     expose:
       - "8000"
 
+  fake-businessday-api:
+    image: vidolin/fake-businessday-api
+    ports:
+      - "9090:8080"
+
 networks:
   broker-kafka:
     driver: bridge

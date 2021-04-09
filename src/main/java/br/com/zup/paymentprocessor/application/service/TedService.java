@@ -20,6 +20,7 @@ public class TedService {
     }
 
     public void validate(TedEntity tedEntity) {
+
         System.out.println("validating: " + tedEntity.toString());
     }
 

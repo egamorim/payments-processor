@@ -63,6 +63,8 @@ public class PaymentRoutes extends RouteBuilder {
                 .port(env.getProperty("server.port", serverPort))
                 .bindingMode(RestBindingMode.json);
 
+        errorHandler(deadLetterChannel("direct:generalError"));
+
         rest(PAYMENTS_PATH)
                 .consumes(MediaType.APPLICATION_JSON_VALUE)
                 .produces(MediaType.APPLICATION_JSON_VALUE)
@@ -70,22 +72,21 @@ public class PaymentRoutes extends RouteBuilder {
                 .marshal().json()
                 .unmarshal(getJacksonDataFormat(PaymentDTO.class))
                 .choice()
-                .when(header(TYPE_HEADER)
-                        .isEqualToIgnoreCase(PAYMENT_TYPE_PIX))
-                .bean(paymentService, "validate")
-                .to("direct:pix")
-                .when(header(TYPE_HEADER)
-                        .isEqualToIgnoreCase(PAYMENT_TYPE_TED))
-                .bean(tedService, "store")
-                .process(tedProcessor)
-                .setHeader(KafkaConstants.KEY, constant("Camel"))
-                .to(String.format(KAFKA_TED_INCLUDED, kafkaProperties.getTedIncluded().getTopicName(), kafkaProperties.getUrl()))
-                .when(header(TYPE_HEADER)
+                    .when(header(TYPE_HEADER).isEqualToIgnoreCase(PAYMENT_TYPE_PIX))
+                        .bean(paymentService, "validate")
+                        .to("direct:pix")
+                    .when(header(TYPE_HEADER).isEqualToIgnoreCase(PAYMENT_TYPE_TED))
+                        .bean(tedService, "validate")
+                        .bean(tedService, "store")
+                        .process(tedProcessor)
+                        .setHeader(KafkaConstants.KEY, constant("Camel"))
+                        .to(String.format(KAFKA_TED_INCLUDED, kafkaProperties.getTedIncluded().getTopicName(), kafkaProperties.getUrl()))
+                    .when(header(TYPE_HEADER)
                         .isEqualToIgnoreCase(PAYMENT_TYPE_DOC))
-                .process(docProcessor)
-                .to("direct:doc")
-                .otherwise()
-                .bean(new RestPaymentError(), "paymentTypeError")
+                        .process(docProcessor)
+                        .to("direct:doc")
+                    .otherwise()
+                        .bean(new RestPaymentError(), "paymentTypeError")
                 .end();
 
         from("direct:ted")
@@ -95,6 +96,9 @@ public class PaymentRoutes extends RouteBuilder {
         from("direct:doc")
                 .log("New DOC processed")
                 .end();
+
+        from("direct:generalError")
+                .log()
 
         //TODO será implementado na pagamento processo
        /* from(String.format(KAFKA_TED_INCLUDED, kafkaProperties.getTedIncluded().getTopicName(), kafkaProperties.getUrl()))
