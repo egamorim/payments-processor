@@ -15,6 +15,9 @@ import javax.validation.constraints.NotNull;
 public class KafkaProperties {
 
     @NotNull
+    private String kafkaBroker;
+
+    @NotNull
     private String url;
 
     @NotNull

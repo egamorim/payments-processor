@@ -149,6 +149,13 @@
             <version>1.10.2</version>
         </dependency>
 
+        <!-- org.jeasy -->
+        <dependency>
+            <groupId>org.jeasy</groupId>
+            <artifactId>easy-random-core</artifactId>
+            <version>4.0.0</version>
+        </dependency>
+
         <!-- DynamoDB Dependencies -->
         <dependency>
             <groupId>com.amazonaws</groupId>

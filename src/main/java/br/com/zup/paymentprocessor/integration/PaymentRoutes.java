@@ -6,9 +6,11 @@ import br.com.zup.paymentprocessor.integration.dto.PaymentDTO;
 import br.com.zup.paymentprocessor.integration.processors.PaymentProcessor;
 import br.com.zup.paymentprocessor.integration.processors.error.RestPaymentError;
 import br.com.zup.paymentprocessor.application.service.PaymentService;
+import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.jackson.JacksonDataFormat;
 import org.apache.camel.component.kafka.KafkaConstants;
+import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,7 +34,6 @@ public class PaymentRoutes extends RouteBuilder {
     private final PaymentProcessor docProcessor;
     private final Environment env;
     private final String serverPort;
-    private final String KAFKA_TED_INCLUDED = "kafka:%s?brokers=%s";
 
     public PaymentRoutes(@Qualifier("tedProcessor") PaymentProcessor tedProcessor,
                          @Qualifier("docProcessor") PaymentProcessor docProcessor,
@@ -72,21 +73,21 @@ public class PaymentRoutes extends RouteBuilder {
                 .marshal().json()
                 .unmarshal(getJacksonDataFormat(PaymentDTO.class))
                 .choice()
-                    .when(header(TYPE_HEADER).isEqualToIgnoreCase(PAYMENT_TYPE_PIX))
-                        .bean(paymentService, "validate")
-                        .to("direct:pix")
-                    .when(header(TYPE_HEADER).isEqualToIgnoreCase(PAYMENT_TYPE_TED))
-                        .bean(tedService, "validate")
-                        .bean(tedService, "store")
-                        .process(tedProcessor)
-                        .setHeader(KafkaConstants.KEY, constant("Camel"))
-                        .to(String.format(KAFKA_TED_INCLUDED, kafkaProperties.getTedIncluded().getTopicName(), kafkaProperties.getUrl()))
-                    .when(header(TYPE_HEADER)
+                .when(header(TYPE_HEADER).isEqualToIgnoreCase(PAYMENT_TYPE_PIX))
+                    .bean(paymentService, "validate")
+                .to("direct:pix")
+                .when(header(TYPE_HEADER).isEqualToIgnoreCase(PAYMENT_TYPE_TED))
+                    .bean(tedService, "validate")
+                    .bean(tedService, "store")
+                    .process(tedProcessor)
+                    .setHeader(KafkaConstants.KEY, constant("Camel"))
+                .to(String.format(kafkaProperties.getKafkaBroker(), kafkaProperties.getTedIncluded().getTopicName()))
+                .when(header(TYPE_HEADER)
                         .isEqualToIgnoreCase(PAYMENT_TYPE_DOC))
-                        .process(docProcessor)
-                        .to("direct:doc")
-                    .otherwise()
-                        .bean(new RestPaymentError(), "paymentTypeError")
+                    .process(docProcessor)
+                .to("direct:doc")
+                .otherwise()
+                .bean(new RestPaymentError(), "paymentTypeError")
                 .end();
 
         from("direct:ted")
@@ -97,17 +98,17 @@ public class PaymentRoutes extends RouteBuilder {
                 .log("New DOC processed")
                 .end();
 
-        from("direct:generalError")
-                .log()
-
         //TODO será implementado na pagamento processo
-       /* from(String.format(KAFKA_TED_INCLUDED, kafkaProperties.getTedIncluded().getTopicName(), kafkaProperties.getUrl()))
-                .log("Message received from Kafka : ${body}")
+        from(String.format(kafkaProperties.getKafkaBroker(), kafkaProperties.getTedIncluded().getTopicName()))
                 .log("    on the topic ${headers[kafka.TOPIC]}")
-                .log("    on the partition ${headers[kafka.PARTITION]}")
-                .log("    with the offset ${headers[kafka.OFFSET]}")
-                .log("    with the key ${headers[kafka.KEY]}");*/
-
+                .unmarshal()
+                .json(JsonLibrary.Jackson)
+                .marshal().json()
+                .unmarshal(getJacksonDataFormat(PaymentDTO.class))
+                .process((Exchange exchange) -> {
+                    PaymentDTO paymentDTO = exchange.getIn().getBody(PaymentDTO.class);
+                    System.out.println(paymentDTO);
+                });
         from("direct:pix")
                 .log("New PIX processed")
                 .end();

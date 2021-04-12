@@ -7,8 +7,7 @@ import org.mapstruct.Builder;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 
-@Mapper(uses = CommonsMapper.class, builder = @Builder(disableBuilder = true), componentModel = "spring",
-        injectionStrategy = InjectionStrategy.CONSTRUCTOR)
+@Mapper(uses = CommonsMapper.class, builder = @Builder(disableBuilder = true), componentModel = "spring")
 public interface TedEntityMapper {
 
     TedEntity tedEntityToPaymentDto(PaymentDTO paymentDTO);
