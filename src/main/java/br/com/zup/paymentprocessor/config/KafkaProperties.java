@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @Validated
 @Setter
 @Getter
-@ConfigurationProperties("pagamento.kafka")
+@ConfigurationProperties("payments.kafka")
 public class KafkaProperties {
 
     @NotNull

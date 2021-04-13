@@ -77,7 +77,6 @@ public class PaymentRoutes extends RouteBuilder {
                     .bean(paymentService, "validate")
                 .to("direct:pix")
                 .when(header(TYPE_HEADER).isEqualToIgnoreCase(PAYMENT_TYPE_TED))
-                    .bean(tedService, "validate")
                     .bean(tedService, "store")
                     .process(tedProcessor)
                     .setHeader(KafkaConstants.KEY, constant("Camel"))
