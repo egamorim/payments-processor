@@ -36,7 +36,7 @@ public class TedService {
     public void validate(TedEntity tedEntity) {
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/YYYY");
         final Map<String, String> params = Map.of("date", formatter.format(tedEntity.getDatePayment()));
-        final ResponseEntity<BusinessDayResponse> response = restTemplate.getForEntity("http://localhost:8080/api/v1/", BusinessDayResponse.class, params);
+        final ResponseEntity<BusinessDayResponse> response = restTemplate.getForEntity("http://localhost:9090/api/v1/", BusinessDayResponse.class, params);
         if (!response.getBody().isBusinessDay) {
             throw new NotBusinessDayException();
         }
