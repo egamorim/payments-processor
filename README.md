@@ -1,14 +1,14 @@
-##Introduction
+## Introduction
 Prova de conceito da utilizacao do Apache Camel.
 
 
 ##  Installatio
 
 
- - ###Kafka
+  ### Kafka
     docker-composer up -d
     
-- #####kafdrop
+ ##### kafdrop
    * To access the Kafdrop http://localhost:19000/
    
    
