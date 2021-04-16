@@ -23,6 +23,6 @@ public class TedProcessor implements PaymentProcessor {
         PaymentDTO paymentDTO = exchange.getIn().getBody(PaymentDTO.class);
 
         TedIncluded tedIncluded = tedIncludedMapper.paymentDtoToTedIncluded(paymentDTO);
-        exchange.getIn().setBody(tedIncluded);
+        exchange.getIn().setBody(tedIncluded, TedIncluded.class);
     }
 }

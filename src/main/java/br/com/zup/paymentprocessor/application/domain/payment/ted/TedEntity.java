@@ -1,7 +1,10 @@
 package br.com.zup.paymentprocessor.application.domain.payment.ted;
 
 import br.com.zup.paymentprocessor.application.converter.LocalDateToStringTypeConverter;
-import com.amazonaws.services.dynamodbv2.datamodeling.*;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverted;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,9 +21,9 @@ public class TedEntity {
 
     @DynamoDBAttribute
     @DynamoDBTypeConverted(converter = LocalDateToStringTypeConverter.class)
-    private LocalDate datePayment;
+    private LocalDate paymentDate;
 
      @DynamoDBAttribute
-     private BigDecimal valuePayment;
+     private BigDecimal paymentValue;
 
 }

@@ -6,6 +6,7 @@ import br.com.zup.paymentprocessor.integration.dto.PaymentDTO;
 import br.com.zup.paymentprocessor.integration.processors.PaymentProcessor;
 import br.com.zup.paymentprocessor.integration.processors.error.RestPaymentError;
 import br.com.zup.paymentprocessor.application.service.PaymentService;
+import br.com.zup.paymentprocessor.ted_included.TedIncluded;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.jackson.JacksonDataFormat;
@@ -77,11 +78,12 @@ public class PaymentRoutes extends RouteBuilder {
                     .bean(paymentService, "validate")
                 .to("direct:pix")
                 .when(header(TYPE_HEADER).isEqualToIgnoreCase(PAYMENT_TYPE_TED))
-                    //.bean(tedService, "validate")
+                    .bean(tedService, "validate")
                     .bean(tedService, "store")
                     .process(tedProcessor)
                     .setHeader(KafkaConstants.KEY, constant("Camel"))
                 .to(String.format(kafkaProperties.getKafkaBroker(), kafkaProperties.getTedIncluded().getTopicName()))
+                //.convertBodyTo(String.class)
                 .when(header(TYPE_HEADER)
                         .isEqualToIgnoreCase(PAYMENT_TYPE_DOC))
                     .process(docProcessor)
@@ -98,17 +100,6 @@ public class PaymentRoutes extends RouteBuilder {
                 .log("New DOC processed")
                 .end();
 
-        //TODO será implementado na pagamento processo
-        from(String.format(kafkaProperties.getKafkaBroker(), kafkaProperties.getTedIncluded().getTopicName()))
-                .log("    on the topic ${headers[kafka.TOPIC]}")
-                .unmarshal()
-                .json(JsonLibrary.Jackson)
-                .marshal().json()
-                .unmarshal(getJacksonDataFormat(PaymentDTO.class))
-                .process((Exchange exchange) -> {
-                    PaymentDTO paymentDTO = exchange.getIn().getBody(PaymentDTO.class);
-                    System.out.println(paymentDTO);
-                });
         from("direct:pix")
                 .log("New PIX processed")
                 .end();

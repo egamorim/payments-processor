@@ -5,18 +5,16 @@ import br.com.zup.paymentprocessor.application.domain.payment.ted.TedEntity;
 import br.com.zup.paymentprocessor.application.domain.payment.ted.TedRepository;
 import br.com.zup.paymentprocessor.application.mappers.payment.ted.TedEntityMapper;
 import br.com.zup.paymentprocessor.integration.dto.PaymentDTO;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 @Component
 public class TedService {
@@ -33,10 +31,10 @@ public class TedService {
         this.restTemplate = new RestTemplate();
     }
 
-    public void validate(TedEntity tedEntity) {
+    public void validate(PaymentDTO paymentDTO) {
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/YYYY");
-         final Map<String, String> params = Map.of("date", formatter.format(tedEntity.getDatePayment()));
-        final ResponseEntity<BusinessDayResponse> response = restTemplate.getForEntity("http://localhost:9090/api/v1/", BusinessDayResponse.class, params);
+        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString("http://localhost:9090/api/v1/businessday").queryParam("date", formatter.format(paymentDTO.getPaymentDate()));
+        ResponseEntity<BusinessDayResponse> response = restTemplate.getForEntity(uriComponentsBuilder.toUriString(), BusinessDayResponse.class);
         if (!response.getBody().isBusinessDay) {
             throw new NotBusinessDayException();
         }
@@ -48,8 +46,10 @@ public class TedService {
     }
 
     @Data
-    private class BusinessDayResponse {
-        private boolean isBusinessDay;
+    @NoArgsConstructor
+    public static class BusinessDayResponse {
+
+        private Boolean isBusinessDay;
     }
 
 }

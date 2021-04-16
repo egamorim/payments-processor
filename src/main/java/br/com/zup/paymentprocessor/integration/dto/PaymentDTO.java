@@ -24,11 +24,11 @@ public class PaymentDTO implements Serializable {
 
     private UUID id;
 
-    @JsonProperty("value_payment")
-    private BigDecimal valuePayment;
+    @JsonProperty("payment_value")
+    private BigDecimal paymentValue;
 
-    @JsonProperty("date_payment")
+    @JsonProperty("payment_date")
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
-    private LocalDate datePayment;
+    private LocalDate paymentDate;
 }

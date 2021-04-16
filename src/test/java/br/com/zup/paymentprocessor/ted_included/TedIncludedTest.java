@@ -31,8 +31,8 @@ public class TedIncludedTest {
 
         TedIncluded tedIncluded = tedIncludedMapper.paymentDtoToTedIncluded(paymentDTO);
 
-        assertThat(paymentDTO.getDatePayment(), notNullValue());
-        assertThat(paymentDTO.getDatePayment().toString(), equalTo(tedIncluded.getDatePayment().toString()));
+        assertThat(paymentDTO.getPaymentDate(), notNullValue());
+        assertThat(paymentDTO.getPaymentDate().toString(), equalTo(tedIncluded.getPaymentDate().toString()));
     }
 }
 

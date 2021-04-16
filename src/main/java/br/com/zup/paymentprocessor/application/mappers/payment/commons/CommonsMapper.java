@@ -4,6 +4,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.Mapper;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -21,5 +23,10 @@ public interface CommonsMapper {
 
     default UUID uuidToCharSequence(CharSequence uuid) {
         return StringUtils.isNotBlank(uuid) ? UUID.fromString(uuid.toString()) : null;
+    }
+
+    default String localDateToCharSequence(LocalDate datePayment) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        return datePayment.format(formatter);
     }
 }
