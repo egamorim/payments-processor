@@ -26,9 +26,9 @@ public class TedService {
         }
     }
 
-    public TedEntity store(PaymentDTO paymentDTO) {
+    public void store(PaymentDTO paymentDTO) {
         TedEntity tedEntity = tedEntityMapper.tedEntityToPaymentDto(paymentDTO);
-        return tedRepository.save(tedEntity);
+        tedRepository.save(tedEntity);
     }
 
     @Data

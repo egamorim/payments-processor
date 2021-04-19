@@ -75,16 +75,23 @@ public class PaymentRoutes extends RouteBuilder {
                     .bean(paymentService, "validate")
                     .to("direct:pix")
                 .when(header(TYPE_HEADER).isEqualToIgnoreCase(PAYMENT_TYPE_TED))
-                    .bean(tedService, "validate")
-                    .bean(tedService, "store")
-                    .process(tedProcessor)
-                    .setHeader(KafkaConstants.KEY, constant("Camel"))
-                    .to(String.format(kafkaProperties.getKafkaBroker(), kafkaProperties.getTedIncluded().getTopicName()))
+                    .to("direct:ted")
                 .when(header(TYPE_HEADER).isEqualToIgnoreCase(PAYMENT_TYPE_DOC))
                     .process(docProcessor)
                     .to("direct:doc")
                 .otherwise()
                 .bean(new RestPaymentError(), "paymentTypeError")
+                .end();
+
+        from("direct:ted")
+                .log("New DOC processed")
+                .bean(tedService, "validate")
+                .bean(tedService, "store")
+                .process(tedProcessor)
+                .setHeader(KafkaConstants.KEY, constant("Camel"))
+                .to(String.format(kafkaProperties.getKafkaBroker(), kafkaProperties.getTedIncluded().getTopicName()))
+                //TODO criar um converter para APPLICATION_JSON_VALUE / antes testar direct
+                .convertBodyTo(String.class)
                 .end();
 
         from("direct:doc")

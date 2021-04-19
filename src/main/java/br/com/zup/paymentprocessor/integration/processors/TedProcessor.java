@@ -21,6 +21,6 @@ public class TedProcessor implements PaymentProcessor {
     public void process(Exchange exchange) throws Exception {
         PaymentDTO paymentDTO = exchange.getIn().getBody(PaymentDTO.class);
         TedIncluded tedIncluded = tedIncludedMapper.paymentDtoToTedIncluded(paymentDTO);
-        exchange.getIn().setBody(tedIncluded, TedIncluded.class);
+        exchange.getIn().setBody(tedIncluded);
     }
 }
