@@ -1,17 +1,14 @@
 package br.com.zup.paymentprocessor.integration;
 
+import br.com.zup.paymentprocessor.application.service.PaymentService;
 import br.com.zup.paymentprocessor.application.service.TedService;
 import br.com.zup.paymentprocessor.config.KafkaProperties;
 import br.com.zup.paymentprocessor.integration.dto.PaymentDTO;
 import br.com.zup.paymentprocessor.integration.processors.PaymentProcessor;
 import br.com.zup.paymentprocessor.integration.processors.error.RestPaymentError;
-import br.com.zup.paymentprocessor.application.service.PaymentService;
-import br.com.zup.paymentprocessor.ted_included.TedIncluded;
-import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.jackson.JacksonDataFormat;
 import org.apache.camel.component.kafka.KafkaConstants;
-import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -76,24 +73,18 @@ public class PaymentRoutes extends RouteBuilder {
                 .choice()
                 .when(header(TYPE_HEADER).isEqualToIgnoreCase(PAYMENT_TYPE_PIX))
                     .bean(paymentService, "validate")
-                .to("direct:pix")
+                    .to("direct:pix")
                 .when(header(TYPE_HEADER).isEqualToIgnoreCase(PAYMENT_TYPE_TED))
                     .bean(tedService, "validate")
                     .bean(tedService, "store")
                     .process(tedProcessor)
                     .setHeader(KafkaConstants.KEY, constant("Camel"))
-                .to(String.format(kafkaProperties.getKafkaBroker(), kafkaProperties.getTedIncluded().getTopicName()))
-                //.convertBodyTo(String.class)
-                .when(header(TYPE_HEADER)
-                        .isEqualToIgnoreCase(PAYMENT_TYPE_DOC))
+                    .to(String.format(kafkaProperties.getKafkaBroker(), kafkaProperties.getTedIncluded().getTopicName()))
+                .when(header(TYPE_HEADER).isEqualToIgnoreCase(PAYMENT_TYPE_DOC))
                     .process(docProcessor)
-                .to("direct:doc")
+                    .to("direct:doc")
                 .otherwise()
                 .bean(new RestPaymentError(), "paymentTypeError")
-                .end();
-
-        from("direct:ted")
-                .log("New TED processed")
                 .end();
 
         from("direct:doc")
