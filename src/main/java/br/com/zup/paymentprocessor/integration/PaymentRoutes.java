@@ -84,14 +84,13 @@ public class PaymentRoutes extends RouteBuilder {
                 .end();
 
         from("direct:ted")
-                .log("New DOC processed")
+                .log("New TED requested")
                 .bean(tedService, "validate")
                 .bean(tedService, "store")
                 .process(tedProcessor)
                 .setHeader(KafkaConstants.KEY, constant("Camel"))
                 .to(String.format(kafkaProperties.getKafkaBroker(), kafkaProperties.getTedIncluded().getTopicName()))
-                //TODO criar um converter para APPLICATION_JSON_VALUE / antes testar direct
-                .convertBodyTo(String.class)
+                .convertBodyTo(PaymentDTO.class)
                 .end();
 
         from("direct:doc")

@@ -9,5 +9,6 @@ import org.mapstruct.Mapper;
 @Mapper(uses = CommonsMapper.class, builder = @Builder(disableBuilder = true), componentModel = "spring")
 public interface TedEntityMapper {
 
-    TedEntity tedEntityToPaymentDto(PaymentDTO paymentDTO);
+    TedEntity fromPaymentDto(PaymentDTO paymentDTO);
+    PaymentDTO fromTedEntity(TedEntity tedEntity);
 }

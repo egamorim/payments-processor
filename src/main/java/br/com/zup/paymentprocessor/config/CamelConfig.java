@@ -1,5 +1,6 @@
 package br.com.zup.paymentprocessor.config;
 
+import br.com.zup.paymentprocessor.integration.converters.TedConverter;
 import org.apache.camel.CamelContext;
 import org.apache.camel.spring.SpringCamelContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,10 @@ public class CamelConfig {
 
     @Bean
     public CamelContext camelContext(){
-        return new SpringCamelContext(applicationContext);
+        TedConverter converter = new TedConverter();
+        SpringCamelContext context = new SpringCamelContext(applicationContext);
+        context.setTypeConverterStatisticsEnabled(true);
+        context.getTypeConverterRegistry().addTypeConverters(converter);
+        return context;
     }
 }
