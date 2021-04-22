@@ -4,13 +4,14 @@ import br.com.zup.paymentprocessor.application.service.PaymentService;
 import br.com.zup.paymentprocessor.application.service.TedService;
 import br.com.zup.paymentprocessor.config.KafkaProperties;
 import br.com.zup.paymentprocessor.integration.dto.PaymentDTO;
-import br.com.zup.paymentprocessor.integration.processors.PaymentProcessor;
-import br.com.zup.paymentprocessor.integration.processors.error.RestPaymentError;
+import br.com.zup.paymentprocessor.integration.processors.DocProcessor;
+import br.com.zup.paymentprocessor.integration.processors.TedProcessor;
+import br.com.zup.paymentprocessor.integration.processors.error.RestPaymentRequestHeaderNotAcepted;
+import lombok.RequiredArgsConstructor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.jackson.JacksonDataFormat;
 import org.apache.camel.component.kafka.KafkaConstants;
 import org.apache.camel.model.rest.RestBindingMode;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
 import static br.com.zup.paymentprocessor.application.domain.Constants.*;
 
 @Component
+@RequiredArgsConstructor
 public class PaymentRoutes extends RouteBuilder {
 
     private final KafkaProperties kafkaProperties;
@@ -28,26 +30,13 @@ public class PaymentRoutes extends RouteBuilder {
 
     private final PaymentService paymentService;
     private final TedService tedService;
-    private final PaymentProcessor tedProcessor;
-    private final PaymentProcessor docProcessor;
+    private final TedProcessor tedProcessor;
+    private final DocProcessor docProcessor;
     private final Environment env;
+    @Value("${server.port}")
     private final String serverPort;
+    private final RestPaymentRequestHeaderNotAcepted restPaymentRequestHeaderNotAcepted;
 
-    public PaymentRoutes(@Qualifier("tedProcessor") PaymentProcessor tedProcessor,
-                         @Qualifier("docProcessor") PaymentProcessor docProcessor,
-                         Environment env,
-                         PaymentService paymentService,
-                         TedService tedService,
-                         @Value("${server.port}") String serverPort,
-                         KafkaProperties kafkaProperties) {
-        this.tedProcessor = tedProcessor;
-        this.tedService = tedService;
-        this.docProcessor = docProcessor;
-        this.kafkaProperties = kafkaProperties;
-        this.env = env;
-        this.paymentService = paymentService;
-        this.serverPort = serverPort;
-    }
 
     @Override
     public void configure() throws Exception {
@@ -80,7 +69,7 @@ public class PaymentRoutes extends RouteBuilder {
                     .process(docProcessor)
                     .to("direct:doc")
                 .otherwise()
-                .bean(new RestPaymentError(), "paymentTypeError")
+                .bean(restPaymentRequestHeaderNotAcepted, "headerNotAcceptable")
                 .end();
 
         from("direct:ted")
@@ -108,4 +97,5 @@ public class PaymentRoutes extends RouteBuilder {
         format.setUnmarshalType(unmarshalType);
         return format;
     }
+
 }
