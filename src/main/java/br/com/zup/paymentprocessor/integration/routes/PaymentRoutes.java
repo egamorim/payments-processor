@@ -1,6 +1,6 @@
 package br.com.zup.paymentprocessor.integration.routes;
 
-import br.com.zup.paymentprocessor.integration.config.AggregatorRoutes;
+import br.com.zup.paymentprocessor.integration.annotation.AggregatorRoutes;
 import br.com.zup.paymentprocessor.integration.dto.PaymentDTO;
 import br.com.zup.paymentprocessor.integration.processors.error.RestPaymentRequestHeaderNotAcepted;
 import lombok.RequiredArgsConstructor;

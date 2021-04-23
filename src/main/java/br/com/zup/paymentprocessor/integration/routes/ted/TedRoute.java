@@ -2,13 +2,12 @@ package br.com.zup.paymentprocessor.integration.routes.ted;
 
 import br.com.zup.paymentprocessor.application.service.TedService;
 import br.com.zup.paymentprocessor.config.KafkaProperties;
-import br.com.zup.paymentprocessor.integration.config.Route;
+import br.com.zup.paymentprocessor.integration.annotation.Route;
 import br.com.zup.paymentprocessor.integration.dto.PaymentDTO;
 import br.com.zup.paymentprocessor.integration.processors.TedProcessor;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.kafka.KafkaConstants;
-import org.springframework.stereotype.Component;
 
 
 @Route

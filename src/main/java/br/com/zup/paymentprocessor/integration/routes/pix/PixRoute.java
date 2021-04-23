@@ -1,7 +1,7 @@
 package br.com.zup.paymentprocessor.integration.routes.pix;
 
 import br.com.zup.paymentprocessor.application.service.PaymentService;
-import br.com.zup.paymentprocessor.integration.config.Route;
+import br.com.zup.paymentprocessor.integration.annotation.Route;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.builder.RouteBuilder;
 
